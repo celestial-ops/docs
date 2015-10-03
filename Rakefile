@@ -1,10 +1,8 @@
-require "bundler/gem_tasks"
-
 namespace :asciidoc do
 
   desc 'create asciidoc'
   task :create do
-    sh 'asciidoctor -a docinfo -a stylesheet! -o dist/latest/index.html docs/main.adoc'
+    sh 'asciidoctor -a docinfo -a stylesheet! -o index.html docs/main.adoc'
   end
 
   desc 'publish ascciidoc to gh-pages'
