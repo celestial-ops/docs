@@ -2,7 +2,7 @@ namespace :asciidoc do
 
   desc 'create asciidoc'
   task :create do
-    sh 'asciidoctor -a docinfo -a stylesheet! -o index.html docs/main.adoc'
+    sh 'asciidoctor -a stylesheet=./css/bootstrap_yeti.css -o index.html docs/main.adoc'
   end
 
   desc 'publish ascciidoc to gh-pages'

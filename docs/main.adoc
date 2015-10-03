@@ -1,2 +1,23 @@
+= Celestial
+Ronen Narkis, <narkisr@gmail.com> v0.11.0
+:toc: left
+:!numbered:
+:idseparator: -
+:idprefix:
+:source-highlighter: pygments
+:pygments-style: friendly
+:sectlinks:
+
 == Introduction 
+
+Celestial is a server that enables to manage machines life cycle from initial VM creation to deployment automation and user access control,
+
+== Setup
+
+== Configuration
+
+=== Hypervisors
+
+==== EC2
+
 
