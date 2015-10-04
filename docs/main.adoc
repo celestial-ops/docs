@@ -11,12 +11,13 @@ Ronen Narkis, <narkisr@gmail.com> v0.11.0
 :redisversion: 2.6.13
 :celestialversion: 0.11.0
 :javaversion: 1.7.x
+:imagesdir: docs/img
 
-= Introduction 
+== Introduction 
 
 Celestial is a server that enables to manage machines life cycle from initial VM creation to deployment automation and user access control,
 
-= Setup
+== Setup
 
 Celestial was designed with deployment simplicity in mind, only two services are required to run Celestial itself and a [Redis](http://redis.io/) instance,
 
@@ -64,7 +65,7 @@ Once its done running you have a celestial instance ready and running now:
 
 
 
-= Walkthrough
+== Walkthrough
 
 In this section we will setup AWS integration and create a Redis based machine, we use AWS mainly because its a publicly available API that any one can play with see <<Hypervisors>> for other supported options.
 
@@ -109,33 +110,31 @@ We will now use the Web UI to create our first Redis based system hosted on AWS:
 *   Note that the source url is http://dl.bintray.com/content/narkisr/boxes/redis-sandbox-0.3.5.tar.gz
 *   Fill up the rest of the values as in the following image:
 
-![](/img/walkthrough/redis-type-add.png)
+image:walkthrough/redis-type-add.png[Linux,85%,85%]
 
 
 Now head on to Systems > Add a System (or https://{hostname}:8443/#/system/add/) and add a new system (omitted values can be left empty):
 
-==== Part 1
+image:walkthrough/system-add.png[Part1,85%,85%]
 
-![](/img/walkthrough/system-add.png)
+Rest of the form:
 
-==== Part 2
+image:walkthrough/system-add-cont.png[Part2,85%,85%]
 
-![](/img/walkthrough/system-add-cont.png)
-
-==== Launching the instance
+=== Launching the instance
 
 Notice that we didn't choose an operation to be done on system save on the last screen (just for the sake of reviewing functionlity), so we will do it using operations menu. Select the stage operation from the menu:
 
-![](/img/walkthrough/stage-launch.png)
+image:walkthrough/stage-launch.png[Launch,85%,85%]
 
 Once the job has been launched you can follow its status by heading to https://{hostname}:8443/#/jobs:
 
-![](/img/walkthrough/job-running.png)
+image:walkthrough/job-running.png[Running,85%,85%]
 
 
 A successful job will result with:
 
-![](/img/walkthrough/job-done-success.png)
+image:walkthrough/job-done-success.png[Running,85%,85%]
 
 You can also review the run progress in the log file (/var/log/celestial.log), you can ssh into the instance and see Redis is running (using the key you provided).
 
@@ -144,8 +143,8 @@ You can also review the run progress in the log file (/var/log/celestial.log), y
 Celestial integrated with many other tools and components, you can set it up to:
 
 *   Start to manage other hypervisors <<Proxmox>> , <<Openstack>>, <<Docker>>.
-*   Register hosts atomically in DNS using [dnsmasq](http://www.thekelleys.org.uk/dnsmasq/doc.html) [hook](posts/configuration.html#hooks) and [](/posts/ips.html)manage static ip's automatically using [generators](/posts/generators.html).
-*   Publish Celestial logs into a central logging system (graylog2/kibana) for auditing the history of your infrastucure changes and track logical workflow [transactions](/posts/transactions.html).
+*   Register hosts atomically in DNS using link:http://www.thekelleys.org.uk/dnsmasq/doc.html[dnsmasq] <<hooks>>.
+*   Publish Celestial logs into a central logging system (graylog2/kibana) for auditing the history of your infrastructure changes and track logical workflow <<Transactions>>.
 *   Give access to other users and group within your organization to automatically provisioned machines, you can set quotas and limit which environment each user can access.
 *   Use the Restful API and automate nightly build machines, use the Swagger UI to move quickly and learn what can be done.
 
