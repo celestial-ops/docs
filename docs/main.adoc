@@ -252,7 +252,7 @@ The Celestial section (situated on top) contains the configuration options of th
 
 | nrepl
 | port
-| Remote [nrepl](https://github.com/clojure/tools.nrepl) connection for debugging, run only within a secure tunnel, emitting this settings will cause it to be disabled.
+| Remote https://github.com/clojure/tools.nrepl[nrepl] connection for debugging, run only within a secure tunnel, emitting this settings will cause it to be disabled.
 | Connecting remotely is possible using lein repl :connect host:port
 
 .3+| job
@@ -289,7 +289,98 @@ Hooks can be enabled by declaring them in celestial.edn, the statement includes 
 
 == Hypervisors
 
-=== EC2
+=== AWS
 
 
-== Integration
+Celestial supports Amazon AWS EC2 machines (see [matrix](/posts/integration.html#aws)) in this section we will go through configuring Celestial to create AWS based systems.
+
+AWS configuration goes under the hypervisor/aws section under the [celestial.edn](/posts/configuration.html#overview) file:
+
+```clojure
+{
+  :hypervisor {
+   :dev {
+     :aws {
+       :access-key ""
+       :secret-key ""
+       :ostemplates {
+         :ubuntu-12.04 {:ami "" :flavor :debian}
+         :centos-6 {:ami "" :flavor :redhat}
+       }
+      }
+    }
+  }
+}
+```
+
+[options="header"]
+.AWS configuration
+|===
+| Property | Description
+| access-key | AWS access key
+| secret-key | AWS API secret key
+| ostemplates | Mappings between system os key to AMI and flavor (redhat or debian).
+|===
+
+
+An AWS based system has the following form (see <<Model>>):
+
+```clojure
+{
+  :env :dev
+  :owner "username"
+
+  :machine {
+    :hostname "red1" :user "ubuntu"
+    :domain "local" :os :ubuntu-12.10
+  }
+
+  :aws {
+    :instance-type "t1.micro" 
+    :key-name "celestial" 
+    :endpoint "ec2.eu-west-1.amazonaws.com"
+  }
+
+  :type "redis"
+} 
+```
+
+|===
+|Section|Property|Description|Comments
+| aws | instance-type | EC2 instance type | See [docs](https://aws.amazon.com/ec2/instance-types/)
+
+| key-name
+| The EC2 machine key pair name.
+| This key should match the default local machine SSH key pair that is used to SSH into the remote machines (usually ~/.ssh/id_rsa).
+|
+| endpoint
+| The AWS endpoint that will receive request to setup this machine.
+| See [endpoint list](http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region)
+|
+.4+| machine
+| os
+| Key value of mapped AWS AMI
+| See [configuration](#configuration) on how to set this up
+
+| user
+| The AMI user name
+| In Ubuntu based AMI this is usually set as ubuntu
+
+| hostname
+| Instance hostname
+| The hostname and domain will be set on the remote machine
+
+| domain
+| Instance domain
+
+|===
+
+
+
+=== Docker
+
+=== Proxmox
+
+=== Openstack
+
+=== Compatibility Matrix
