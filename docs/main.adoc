@@ -345,6 +345,7 @@ An AWS based system has the following form (see <<Model>>):
 } 
 ```
 
+.AWS System
 |===
 |Section|Property|Description|Comments
 | aws | instance-type | EC2 instance type | See [docs](https://aws.amazon.com/ec2/instance-types/)
