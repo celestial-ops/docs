@@ -8,7 +8,7 @@ Ronen Narkis, <narkisr@gmail.com> v0.11.0
 :pygments-style: friendly
 :sectlinks:
 :ubuntuversion: 14.x
-:redisversion: 2.6.13
+:redisversion: 2.x
 :celestialversion: 0.11.0
 :javaversion: 1.7.x
 :imagesdir: docs/img
@@ -148,10 +148,148 @@ Celestial integrated with many other tools and components, you can set it up to:
 *   Give access to other users and group within your organization to automatically provisioned machines, you can set quotas and limit which environment each user can access.
 *   Use the Restful API and automate nightly build machines, use the Swagger UI to move quickly and learn what can be done.
 
+## Configuration
+
+### Overview
+
+Celestial integrates with Hypervisors, provisioning and central logging systems, all the configuration data is kept under **/etc/celestial/celesitlial.edn** using The link:https://github.com/edn-format/edn[EDN] file format (Clojure's native data representation).
+
+The configuration file is divided to the following sections:
+
+*   Celestial properties like: ports, log settings and cert credentials.
+*   Hypervisors where AWS, Openstack , Proxmox properties are set in matching sections.
+*   Redis settings
+*   SSH settings, mainly the private key path used to connect to remote instances.
+*   Hooks, where we can set actions to be invoked post machine creation etc..
+
+**See the <<Openstack>>, <<Proxmox>> and <<AWS>> sections for specific hypervisor configuration options.**
+
+### Celestial
+
+The Celestial section (situated on top) contains the configuration options of the Celestial server itself:
+```clojure
+{
+ :celestial {
+   :port 8082 
+   :https-port 8443
+   :log {
+     :level :info
+     :path "celestial.log"
+     :gelf {
+	 :host "192.168.1.1"
+	 :type :kibana 
+	}
+   }
+
+   :cert {
+     :keystore "foo.keystore"
+     :password "foobar"
+   }
+
+   :job {
+     :status-expiry 5
+      :lock {
+        :expiry 30
+        :wait-time 5
+      }
+   }
+
+   ; disabled by default
+   :nrepl {
+     :port 7888
+   }
+ }
+} 
+```
+
+[options="header"]
+.Mandatory Settings
+|===
+|Section|Property|Description|Comments
+
+.2+| ports
+| port
+| Standard http port
+| Used for non secured anonymous operations only
+
+| https-port
+| Secured https port
+| Used for secured RESTful API operations
+
+.2+| log
+| level
+| Default logging level
+| Optional values include: trace, debug, info, error.
+
+| path
+| Where the log file is store locally
+| Recommend value for production is /var/log/celestial.log
+
+.2+| cert
+| keystore
+| Java keystore file
+| If no file found a file is generated with default password.
+
+| password
+| Keystore password
+| This password will be used to generate a default keystore or to use an existing one.
+|===
 
 
-=== Hypervisors
+[options="header"]
+.Optional Settings
+|===
+|Section|Property|Description|Comments
 
-==== EC2
+.2+| gelf
+| host
+| Host url of a link:https://www.graylog.org/resources/gelf/[GELF] enabled log server
+|
+
+| type
+| Type of central logging either :kibana :graylog2 :logstash)
+| See <<Integration>> on how to incorporate celestial with link:http://www.elasticsearch.org/overview/kibana/[kibana3].
+
+| nrepl
+| port
+| Remote [nrepl](https://github.com/clojure/tools.nrepl) connection for debugging, run only within a secure tunnel, emitting this settings will cause it to be disabled.
+| Connecting remotely is possible using lein repl :connect host:port
+
+.3+| job
+| lock expiry
+| The max time (in minutes) that a lock will be held for a job (on a system) beyond this threshold the job is considered as failed (lock is released).
+| 5 minutes by default.
+
+| lock wait-time
+| The max time (in minutes) that a job will wait in order to obtain a lock on a system before giving up and failing.
+| 5 minutes by default.
+
+| status-expiry
+| How long the finished jos will be kept.
+| 5 minutes by default.
+
+|===
+
+=== Hooks
+
+Celestial supports the notion of running hook functions after operation failure and success, one use case is registering hostnames in a link:http://www.thekelleys.org.uk/dnsmasq/doc.html[dnsmasq] server instance, notifying external systems is another. A Hook gets notified with an event stating the workflow that lead to it and its status, for an implementation hook example please see this link:https://github.com/celestial-ops/celestial-core/blob/master/src/hooks/dnsmasq.clj[example].
 
 
+Hooks can be enabled by declaring them in celestial.edn, the statement includes the hooks ns followed by the called function, arguments declared within it will be passed to the function call as well.
+
+```clojure
+{
+ ; rest omitted
+ :hooks {
+   hooks.dnsmasq/update-dns {
+    :dnsmasq "192.168.1.1" :user "name" :domain "local"
+ }
+}
+```
+
+== Hypervisors
+
+=== EC2
+
+
+== Integration
