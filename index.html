@@ -8316,7 +8316,6 @@ span.icon > .fa {
 </li>
 <li><a href="#walkthrough">Walkthrough</a>
 <ul class="sectlevel2">
-<li><a href="#launching-the-instance">Launching the instance</a></li>
 <li><a href="#where-to-go-next">Where to go next</a></li>
 </ul>
 </li>
@@ -8420,108 +8419,8 @@ span.icon > .fa {
 <div class="sect1">
 <h2 id="walkthrough"><a class="link" href="#walkthrough">Walkthrough</a></h2>
 <div class="sectionbody">
-<iframe width="720" height="415"
-src="http://www.youtube.com/embed/DGj15bmY7wg">
-</iframe>
 <div class="paragraph">
-<p>In this section we will setup AWS integration and create a Redis based machine, we use AWS mainly because its a publicly available API that any one can play with see <a href="#hypervisors">Hypervisors</a> for other supported options.</p>
-</div>
-<div class="paragraph">
-<p>Note that if you didn&#8217;t install Celestial yet then head on to [installation](/posts/installation.html) first.</p>
-</div>
-<div class="paragraph">
-<p>Edit the hypervisor section and add the following to /etc/celestial/celestial.edn:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-ss">:hypervisor</span> <span class="tok-p">{</span>
-  <span class="tok-ss">:dev</span> <span class="tok-p">{</span>
-    <span class="tok-ss">:aws</span> <span class="tok-p">{</span>
-      <span class="tok-ss">:access-key</span> <span class="tok-s">&quot;&quot;</span>
-      <span class="tok-ss">:secret-key</span> <span class="tok-s">&quot;&quot;</span>
-      <span class="tok-ss">:ostemplates</span> <span class="tok-p">{</span>
-        <span class="tok-ss">:ubuntu-13.04</span> <span class="tok-p">{</span><span class="tok-ss">:ami</span> <span class="tok-s">&quot;ami-02b55375&quot;</span> <span class="tok-ss">:flavor</span> <span class="tok-ss">:debian</span><span class="tok-p">}</span>
-      <span class="tok-p">}</span>
-    <span class="tok-p">}</span>
-  <span class="tok-p">}</span>
- <span class="tok-p">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now we will generate an ssh key on the Celestial machine, this key will be used by Celestial to access the machine via ssh:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>ssh-keygen</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Configure the private key in /etc/celestial/celestial.edn (match the user to your machine):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash">:ssh <span class="tok-o">{</span>
-  :private-key-path <span class="tok-s2">&quot;/home/{user}/.ssh/id_rsa&quot;</span>
-<span class="tok-o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Import this key into the list of keypairs in AWS (under the key pairs section) and name it celestial-demo.</p>
-</div>
-<div class="paragraph">
-<p>We will now use the Web UI to create our first Redis based system hosted on AWS:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>First we will add a Redis type by heading to Types &gt; Add (login using admin/changeme).</p>
-</li>
-<li>
-<p>Note that the source url is <a href="http://dl.bintray.com/content/narkisr/boxes/redis-sandbox-0.4.6.tar.gz" class="bare">http://dl.bintray.com/content/narkisr/boxes/redis-sandbox-0.4.6.tar.gz</a> and name is redis-sandbox-0.4.6.</p>
-</li>
-<li>
-<p>Fill up the rest of the values as in the following image:</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="docs/img/walkthrough/redis-type-add.png" alt="Linux" width="85%" height="85%"></span></p>
-</div>
-<div class="paragraph">
-<p>Now head on to Systems &gt; Add a System and add a new system (omitted values can be left empty):</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="docs/img/walkthrough/system-add.png" alt="Part1" width="85%" height="85%"></span></p>
-</div>
-<div class="paragraph">
-<p>Rest of the form:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="docs/img/walkthrough/system-add-cont.png" alt="Part2" width="85%" height="85%"></span></p>
-</div>
-<div class="sect2">
-<h3 id="launching-the-instance"><a class="link" href="#launching-the-instance">Launching the instance</a></h3>
-<div class="paragraph">
-<p>Notice that we didn&#8217;t choose an operation to be done on system save on the last screen (just for the sake of reviewing functionlity), so we will do it using operations menu. Select the stage operation from the menu:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="docs/img/walkthrough/stage-launch.png" alt="Launch" width="85%" height="85%"></span></p>
-</div>
-<div class="paragraph">
-<p>Once the job has been launched you are redirected to the jobs view:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="docs/img/walkthrough/job-running.png" alt="Running" width="85%" height="85%"></span></p>
-</div>
-<div class="paragraph">
-<p>A successful job will result with:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="docs/img/walkthrough/job-done-success.png" alt="Running" width="85%" height="85%"></span></p>
-</div>
-<div class="paragraph">
-<p>You can also review the run progress in the log file (/var/log/celestial.log), you can ssh into the instance and see Redis is running (using the key you provided).</p>
-</div>
+<p>TBD</p>
 </div>
 <div class="sect2">
 <h3 id="where-to-go-next"><a class="link" href="#where-to-go-next">Where to go next</a></h3>
@@ -9358,7 +9257,7 @@ src="http://www.youtube.com/embed/DGj15bmY7wg">
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-01-27 23:41:31 AEDT
+Last updated 2017-01-27 23:53:12 AEDT
 </div>
 </div>
 </body>
