@@ -56,6 +56,3 @@ DEPENDENCIES
   guard-minitest
   guard-shell
   pygments.rb
-
-BUNDLED WITH
-   1.10.6
