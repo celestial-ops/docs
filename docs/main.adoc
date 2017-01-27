@@ -1,5 +1,5 @@
 = Celestial
-Ronen Narkis, <narkisr@gmail.com> v0.13.1
+Ronen Narkis, <narkisr@gmail.com> v0.13.4
 :toc: left
 :!numbered:
 :idseparator: -
@@ -7,11 +7,10 @@ Ronen Narkis, <narkisr@gmail.com> v0.13.1
 :source-highlighter: pygments
 :pygments-style: friendly
 :sectlinks:
-:ubuntuversion: 15.x
-:redisversion: 2.x
-:proxmoxversion: 3.x
-:celestialversion: 0.12.6
-:javaversion: 1.7.x
+:ubuntuversion: 16.x
+:redisversion: 3.x
+:celestialversion: 0.13.4
+:javaversion: 1.8.x
 :imagesdir: docs/img
 
 == Introduction 
@@ -30,25 +29,10 @@ Perquisites:
 
 The following options are available to get started quickly:
 
-* Use Celestial install script.
-* Setup a local vagrant machine.
+* Use Vagrant to set up a VM running Celestial
+* User Docker compose to launch Celestial container with its dependencies.
 
 There are a couple of options to get Celestial going, using a dedicate Ubuntu VM and the install script is the recommended production option.
-
-=== Install script
-
-The following install script sets up a clean celestial installation on an Ubuntu server (ubuntuversion) instance:
-
-```bash
-$ wget https://gist.githubusercontent.com/narkisr/ad24502f7a4035391692/raw/celestial-install.sh 
-$ sudo ./celestial-install.sh
-```
-
-Once its done running you have a celestial instance ready and running now:
-
-* Point your browser to https://{hostname}:8443/ and use admin/changeme credentials
-* Head on to <<Walkthrough>> section.
-
 
 === Vagrant
 
@@ -63,8 +47,6 @@ Once its done running you have a celestial instance ready and running now:
 
 * Point your browser to https://{hostname}:8443/ (admin/changeme)
 * Head on to <<Walkthrough>> section.
-
-
 
 == Walkthrough
 
@@ -384,187 +366,6 @@ An AWS based system has the following form (see <<Model>>):
 |===
 
 
-AWS VPC based system:
-
-
-=== Proxmox
-
-
-Celestial supports Proxmox {proxmoxversion} (see <<Matrix>>) in this section we will go through configuring Celestial to work with a Proxmox cluster and how to create Proxmox based systems.
-
-
-Proxmox configuration goes under the hypervisor/proxmox section in the link:#overview[configuration] file:
-
-```clojure
-{
- :hypervisor {
-   :dev {
-     :proxmox {
-       :master :proxmox-a
-       :nodes {
-         :proxmox-a {:username "root" :password "foobar" :host "localhost" :ssh-port 2222}
-       }
-       :ostemplates {
-	   :ubuntu-12.04 "local:vztmpl/ubuntu-12.04-puppet_3-x86_64.tar.gz"
-       }
-       :generators {
-	   :ip-range ["192.168.5.90" "192.168.5.100" ]
-       }
-     }
-   }
-  }
-}
-```
-
-.Proxmox Configuration
-|===
-
-|Section|Property|Description|Comments
-|
-| master
-| Proxmox cluster master node
-| Key should exists in the nodes map
-
-.4+| nodes
-| username 
-| node user name 
-| User should have admin permissions
-
-
-| password 
-| node user password
-|
-
-| host
-| node instance hostname
-|
-
-
-| ssh-port
-| node ssh port
-| Used for operations that aren't available in the API like nfs feature toggle 
-
-| ostemplates
-| *
-| Mappings between system os key and container templates
-| See <<System>>  model
-
-| generators
-| ip-range
-| Static IP range assigned for newly created containers
-| Openvz containers requires a static IP for each VE, Celestial auto assigns an IP if missing in <<System>> machine section
-
-
-|===
-
-
-==== Templates
-Celestial uses Proxmox CT template as a basis for the machines it creates, the template perquisites are:
-
-*   The template should allow Celestial SSH access via its public key, thus including it under ~/.ssh/authorized_keys.
-*   Puppet/Chef should be pre installed.
-
-The procedure of creating a CT template is well covered in this link:http://pve.proxmox.com/wiki/Custom_built_template[entry].
-
-==== SSH access
-
-In order to run vztcl remotely (see features in the [configuration](/posts/proxmox.html/configuration) Celestial requires SSH key (password less) access to the configured Proxmox node instance, the simplest way to achieve this is via:
-
-    $ ssh-keygen
-    $ ssh-copy-id proxmox-host 
-
-Its recommended to read about Celestial <<System>> if you haven't already, a Proxmox based system has the following form:
-
-```clojure
-{
- :machine {
-   :cpus 4 :memory 4096 :disk 30
-   :hostname "red1" :ip "192.168.5.33" :domain "local"
-   :os :ubuntu-12.04 :user "root"
-  }
-
-  :proxmox {
-    :onboot true
-    :vmid 101
-    :nameserver "8.8.8.8" 
-    :password "foobar1" :node "proxmox-a"
-    :type :ct
-    :features [] 
-   }
-
-   :type "redis"
-} 
-```
-.Proxmox System
-|===
-
-|Section|Property|Description|Comments
-.7+| proxmox
-
-| onboot
-| Set container to start automatically on boot
-|
-
-| vmid
-| Proxmox VE id number, if omitted one will be generated must be greater then 100.
-| See Proxmox link:http://pve.proxmox.com/wiki/Manual:_vm.conf[docs]
-
-|nameserver
-|The container dns server
-|
-
-| password
-| Container password
-|
-
-| node
-| The Proxmox node that will host this container
-|
-
-| type
-| Whether this system is a container or a VM.
-| See Proxmox link:http://pve.proxmox.com/wiki/FAQ#What_is_a_container.2C_CT.2C_VE.2C_Virtual_Private_Server.2C_VPS.3F[FAQ] about differences (currently only containers are supported).
-
-| features
-| Extra features that are turned on by vztcl like nfs:on
-| See this link:http://auzietech.blogspot.co.il/2012/05/openvz-and-proxmox-nfs-in-vz-containers.html[entry]
-
-.8+| machine
-
-| cpus
-| CPU container share in cores
-|
-
-| memory 
-| Allocated RAM in MB 
-|
-
-| disk
-| allocated disk in GB
-|
-
-| hostname
-| Container hostname
-|
-
-| ip
-| Container IP address
-|
-
-| domain 
-| Container domain
-|
-
-| os
-| Key value of mapped Proxmox VE template
-|
-
-| user
-| The user that will be used during provisioning 
-|
-
-|===
-
 === GCE
 
 link:https://cloud.google.com/compute/[Google Compute] is supported with the following configuration and model
@@ -763,7 +564,7 @@ $ ssh-copy-id celestial@remote-kvm
 
 ```
 
-Another issue is that we can't deploy Celestial itself as a VM within an hypervisor that we would like to manage due to link:http://wiki.libvirt.org/page/Guest_can_reach_outside_network,_but_can't_reach_host_(macvtap)[networking limitations] imposed by KVM (install Celestial outside any of the managed hosts).
+Another issue is that we can't deploy Celestial itself as a VM within an hypervisor that we would like to manage due to link:https://wiki.libvirt.org/page/TroubleshootMacvtapHostFail[networking limitations] imposed by KVM (install Celestial outside any of the managed hosts).
 
 
 === Openstack
