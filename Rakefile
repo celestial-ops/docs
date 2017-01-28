@@ -8,7 +8,7 @@ namespace :asciidoc do
 
   desc 'publish ascciidoc to gh-pages'
   task :publish => [:create] do
-    sh 'ghp-import -m "Generate documentation" -b gh-pages dist/'
+    sh 'ghp-import -m "Generate documentation" -b gh-pages dist/latest/'
     sh 'git push origin gh-pages'
   end
 
