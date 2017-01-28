@@ -1,8 +1,9 @@
+
 namespace :asciidoc do
 
   desc 'create asciidoc'
   task :create do
-    sh 'asciidoctor -a stylesheet=./css/bootstrap_cosmo.css -o index.html docs/main.adoc'
+    sh 'asciidoctor -a stylesheet=./css/bootstrap_cosmo.css -o dist/latest/index.html docs/main.adoc'
   end
 
   desc 'publish ascciidoc to gh-pages'
