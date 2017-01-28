@@ -34,6 +34,17 @@ The following options are available to get started quickly:
 
 There are a couple of options to get Celestial going, using a dedicate Ubuntu VM and the install script is the recommended production option.
 
+=== Docker
+
+Make sure have link:https://www.docker.com/products/docker-engine[docker-engine] and link:https://www.docker.com/products/docker-engine:[docker-compose] installed on your system:
+
+```bash
+$ git clone git://github.com/celestial-ops/dockerized.git
+$ sudo docker-compose run -p 8443:8443 celestial
+```
+
+You should now have https://localhost:8443 working, make sure to check celestial.edn on how to customize the setup.
+
 === Vagrant
 
 If you don't have an Ubuntu machine then using Vagrant is an excellent option to test Celestial quickly (make sure to have link:http://opskeleton.github.io/opskeleton/latest/#installation[opskeleton] perquisites installed):

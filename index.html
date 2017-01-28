@@ -8311,6 +8311,7 @@ span.icon > .fa {
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#setup">Setup</a>
 <ul class="sectlevel2">
+<li><a href="#docker">Docker</a></li>
 <li><a href="#vagrant">Vagrant</a></li>
 </ul>
 </li>
@@ -8388,6 +8389,21 @@ span.icon > .fa {
 </div>
 <div class="paragraph">
 <p>There are a couple of options to get Celestial going, using a dedicate Ubuntu VM and the install script is the recommended production option.</p>
+</div>
+<div class="sect2">
+<h3 id="docker"><a class="link" href="#docker">Docker</a></h3>
+<div class="paragraph">
+<p>Make sure have <a href="https://www.docker.com/products/docker-engine">docker-engine</a> and <a href="https://www.docker.com/products/docker-engine:">docker-compose</a> installed on your system:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>git clone git://github.com/celestial-ops/dockerized.git
+<span class="tok-nv">$ </span>sudo docker-compose run -p 8443:8443 celestial</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should now have <a href="https://localhost:8443" class="bare">https://localhost:8443</a> working, make sure to check celestial.edn on how to customize the setup.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="vagrant"><a class="link" href="#vagrant">Vagrant</a></h3>
@@ -9257,7 +9273,7 @@ span.icon > .fa {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-01-27 23:53:12 AEDT
+Last updated 2017-01-29 01:56:49 AEDT
 </div>
 </div>
 </body>
